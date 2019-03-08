@@ -9,8 +9,12 @@ require (
 	github.com/jacobsa/ogletest v0.0.0-20170503003838-80d50a735a11 // indirect
 	github.com/jacobsa/reqtrace v0.0.0-20150505043853-245c9e0234cb // indirect
 	github.com/jtolds/gls v4.20.0+incompatible // indirect
+	github.com/lxn/walk v0.0.0-20190228115411-6b3956b98df1
+	github.com/lxn/win v0.0.0-20190226192825-50e22abd4ff9
 	github.com/smartystreets/assertions v0.0.0-20190215210624-980c5ac6f3ac // indirect
 	github.com/smartystreets/goconvey v0.0.0-20181108003508-044398e4856c // indirect
 	github.com/stretchr/testify v1.3.0 // indirect
 	golang.org/x/net v0.0.0-20190301231341-16b79f2e4e95 // indirect
+	golang.org/x/sys v0.0.0-20190306220723-b294cbcfc56d // indirect
+	gopkg.in/Knetic/govaluate.v3 v3.0.0 // indirect
 )

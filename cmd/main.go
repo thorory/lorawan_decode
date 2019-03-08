@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/thorory/lorawan_decode/internel/decode"
+	"github.com/thorory/lorawan_decode/internel/ui"
 )
 
 var phyPayload string
@@ -17,6 +18,8 @@ func init() {
 
 func main() {
 	flag.Parse()
+
+	ui.InitClipboard()
 
 	b, err := hex.DecodeString(phyPayload)
 	if err != nil {

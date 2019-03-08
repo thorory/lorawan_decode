@@ -57,7 +57,8 @@ type FCtrl struct {
 }
 
 type FOpts struct {
-	Payload string `json:"Payload,omitempty"`
+	Payload     string            `json:"Payload,omitempty"`
+	MacCommands []lorawan.Payload `json:"MacCommands"`
 	// Maccommands string
 }
 
@@ -101,7 +102,7 @@ func PHYPayloadMarshalToText(phypayload []byte) (string, error) {
 func (c *Content) String() string {
 
 	raw := hex.EncodeToString(c.RawPacket)
-	pkt, _ := json.MarshalIndent(c.PHYPayload, "", "    ")
+	pkt, _ := json.MarshalIndent(c.PHYPayload, "\r", "    ")
 
 	return fmt.Sprintf("Raw PHYPayload: %s\nContent: %s\n", raw, pkt)
 }
@@ -204,6 +205,13 @@ func decodeUplinkMACPayload(p *lorawan.PHYPayload) (MACPayload, error) {
 		frmPayload = append(frmPayload, b...)
 	}
 
+	err := p.DecodeFOptsToMACCommands()
+	if err != nil {
+		return MACPayload{}, err
+	}
+
+	macPL := p.MACPayload.(*lorawan.MACPayload)
+
 	return MACPayload{
 		FPort: fport,
 		FHDR: FHDR{
@@ -216,7 +224,8 @@ func decodeUplinkMACPayload(p *lorawan.PHYPayload) (MACPayload, error) {
 				ClassB:    &m.FHDR.FCtrl.ClassB,
 			},
 			FOpts: FOpts{
-				Payload: hex.EncodeToString(fopts), // TODO
+				Payload:     hex.EncodeToString(fopts), // TODO
+				MacCommands: macPL.FHDR.FOpts,
 			},
 		},
 		FRMPayload: hex.EncodeToString(frmPayload),
@@ -246,6 +255,13 @@ func decodeDownlinkMACPayload(p *lorawan.PHYPayload) (MACPayload, error) {
 		frmPayload = append(frmPayload, b...)
 	}
 
+	err := p.DecodeFOptsToMACCommands()
+	if err != nil {
+		return MACPayload{}, err
+	}
+
+	macPL := p.MACPayload.(*lorawan.MACPayload)
+
 	return MACPayload{
 		FPort: fport,
 		FHDR: FHDR{
@@ -257,7 +273,8 @@ func decodeDownlinkMACPayload(p *lorawan.PHYPayload) (MACPayload, error) {
 				FPending: &m.FHDR.FCtrl.FPending,
 			},
 			FOpts: FOpts{
-				Payload: hex.EncodeToString(fopts), // TODO
+				Payload:     hex.EncodeToString(fopts), // TODO
+				MacCommands: macPL.FHDR.FOpts,
 			},
 		},
 		FRMPayload: hex.EncodeToString(frmPayload),
